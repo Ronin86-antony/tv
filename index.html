@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Impex TV File Checker – USB Compatibility Analyzer</title>
+  <meta name="description" content="Check if your downloaded movie or video file will play on an Impex 32-inch non-smart LED TV via USB pendrive." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Background Orbs -->
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+  <div class="bg-orb orb-3"></div>
+
+  <div class="app-wrapper">
+
+    <!-- Header -->
+    <header class="header">
+      <div class="header-icon">📺</div>
+      <div class="header-text">
+        <h1>Impex TV <span class="accent">File Checker</span></h1>
+        <p class="subtitle">Check if your movie will play on Impex 32" Non-Smart LED TV via USB</p>
+      </div>
+    </header>
+
+    <!-- Tab Switcher -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tab-file" onclick="switchTab('file')">
+        <span class="tab-icon">📁</span> Drop File
+      </button>
+      <button class="tab-btn" id="tab-screenshot" onclick="switchTab('screenshot')">
+        <span class="tab-icon">📸</span> Scan Screenshot
+      </button>
+      <button class="tab-btn" id="tab-manual" onclick="switchTab('manual')">
+        <span class="tab-icon">✏️</span> Manual
+      </button>
+    </div>
+
+    <!-- ===== TAB 1: FILE DROP ===== -->
+    <section class="tab-content active" id="section-file">
+      <div class="card drop-zone-card">
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-icon" id="dropIcon">🎬</div>
+          <p class="drop-title" id="dropTitle">Drag & Drop your video file here</p>
+          <p class="drop-sub" id="dropSub">or click to browse — <strong>file never leaves your device</strong></p>
+          <input type="file" id="fileInput" accept="video/*,.mkv,.avi,.mp4,.mov,.wmv,.flv,.ts,.m4v" hidden />
+          <button class="btn-browse" id="btnBrowse" onclick="document.getElementById('fileInput').click()">Browse File</button>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading-state hidden" id="loadingState">
+          <div class="spinner"></div>
+          <p>Reading file metadata<span class="dots">...</span></p>
+        </div>
+
+        <!-- File Info Card -->
+        <div class="file-info-strip hidden" id="fileInfoStrip">
+          <div class="file-icon">🎞️</div>
+          <div class="file-meta">
+            <p class="file-name" id="fileName">–</p>
+            <p class="file-size" id="fileSize">–</p>
+          </div>
+          <button class="btn-clear" onclick="clearFile()" title="Clear">✕</button>
+        </div>
+      </div>
+
+      <!-- Result Panel for file -->
+      <div id="fileResult"></div>
+    </section>
+
+    <!-- ===== TAB 2: MANUAL INPUT ===== -->
+    <section class="tab-content" id="section-manual">
+      <div class="card form-card">
+        <h2 class="form-title">Describe Your Video File</h2>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="sel-container">File Format (Container)</label>
+            <div class="select-wrap">
+              <select id="sel-container">
+                <option value="">– Select –</option>
+                <option value="mp4">MP4 (.mp4)</option>
+                <option value="mkv">MKV (.mkv)</option>
+                <option value="avi">AVI (.avi)</option>
+                <option value="mov">MOV (.mov)</option>
+                <option value="wmv">WMV (.wmv)</option>
+                <option value="flv">FLV (.flv)</option>
+                <option value="ts">TS / M2TS (.ts)</option>
+                <option value="m4v">M4V (.m4v)</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sel-vcodec">Video Codec</label>
+            <div class="select-wrap">
+              <select id="sel-vcodec">
+                <option value="">– Select –</option>
+                <option value="h264">H.264 / AVC</option>
+                <option value="h265">H.265 / HEVC</option>
+                <option value="mpeg4">MPEG-4 / Xvid / DivX</option>
+                <option value="mpeg2">MPEG-2</option>
+                <option value="av1">AV1</option>
+                <option value="vp9">VP9</option>
+                <option value="vp8">VP8</option>
+                <option value="wmv">WMV / VC-1</option>
+                <option value="other">Other / Unknown</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sel-acodec">Audio Codec</label>
+            <div class="select-wrap">
+              <select id="sel-acodec">
+                <option value="">– Select –</option>
+                <option value="aac">AAC</option>
+                <option value="mp3">MP3</option>
+                <option value="ac3">AC3 / Dolby Digital</option>
+                <option value="dts">DTS</option>
+                <option value="truehd">Dolby TrueHD / Atmos</option>
+                <option value="flac">FLAC</option>
+                <option value="pcm">PCM / LPCM</option>
+                <option value="eac3">EAC3 / Dolby Digital Plus</option>
+                <option value="opus">Opus</option>
+                <option value="other">Other / Unknown</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sel-resolution">Resolution</label>
+            <div class="select-wrap">
+              <select id="sel-resolution">
+                <option value="">– Select –</option>
+                <option value="480">480p (SD)</option>
+                <option value="576">576p (SD)</option>
+                <option value="720">720p (HD)</option>
+                <option value="1080">1080p (Full HD)</option>
+                <option value="1440">1440p (2K QHD)</option>
+                <option value="2160">2160p (4K UHD)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sel-filesize">Approximate File Size</label>
+            <div class="select-wrap">
+              <select id="sel-filesize">
+                <option value="">– Select –</option>
+                <option value="small">Under 2 GB</option>
+                <option value="medium">2 GB – 4 GB</option>
+                <option value="large">Over 4 GB</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-check" id="btnCheck" onclick="checkManual()">
+          <span>Check Compatibility</span> <span class="btn-arrow">→</span>
+        </button>
+      </div>
+
+      <!-- Result Panel for manual -->
+      <div id="manualResult"></div>
+    </section>
+
+    <!-- ===== TAB 2: SCREENSHOT SCAN ===== -->
+    <section class="tab-content" id="section-screenshot">
+      <div class="card drop-zone-card">
+        <div class="drop-zone img-drop-zone" id="imgDropZone">
+          <div class="drop-icon" id="imgDropIcon">📸</div>
+          <p class="drop-title">Drop a Screenshot Here</p>
+          <p class="drop-sub">Works with <strong>VLC Media Info</strong>, <strong>Windows Properties</strong>, <strong>MediaInfo app</strong>, or any file details screenshot</p>
+          <input type="file" id="imgFileInput" accept="image/*" hidden />
+          <button class="btn-browse" onclick="document.getElementById('imgFileInput').click()">Browse Screenshot</button>
+        </div>
+
+        <!-- Image Preview Strip -->
+        <div class="img-preview-strip hidden" id="imgPreviewStrip">
+          <img id="imgPreview" class="screenshot-thumb" src="" alt="Screenshot preview" />
+          <div class="img-preview-meta">
+            <p class="file-name" id="imgFileName">–</p>
+            <p class="file-size" id="imgDimensions">–</p>
+          </div>
+          <button class="btn-clear" onclick="clearScreenshot()" title="Clear">✕</button>
+        </div>
+
+        <!-- OCR Loading -->
+        <div class="loading-state hidden" id="ocrLoadingState">
+          <div class="spinner"></div>
+          <div class="ocr-progress-wrap">
+            <p id="ocrStatusText">Initializing OCR engine<span class="dots"></span></p>
+            <div class="ocr-progress-bar"><div class="ocr-progress-fill" id="ocrProgressFill"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Extracted Text Preview -->
+      <div class="card ocr-text-card hidden" id="ocrTextCard">
+        <div class="ocr-text-header">
+          <span class="ocr-text-icon">🔍</span>
+          <h3>Text Extracted from Screenshot</h3>
+          <button class="btn-ocr-recheck" onclick="recheckOcrText()">Re-check ↻</button>
+        </div>
+        <pre class="ocr-raw-text" id="ocrRawText"></pre>
+        <p class="ocr-hint">💡 The app auto-detected the specs above from this text. If something looks wrong, use the Manual tab.</p>
+      </div>
+
+      <!-- Result Panel for screenshot -->
+      <div id="screenshotResult"></div>
+    </section>
+
+    <!-- Specs Reference -->
+    <div class="specs-ref card">
+      <h3>📋 Impex 32" TV – USB Supported Specs (Reference)</h3>
+      <div class="specs-grid">
+        <div class="spec-item good">
+          <div class="spec-label">✅ Containers</div>
+          <div class="spec-val">MP4, MKV, AVI, TS, M4V</div>
+        </div>
+        <div class="spec-item good">
+          <div class="spec-label">✅ Video Codecs</div>
+          <div class="spec-val">H.264, MPEG-4, Xvid, MPEG-2</div>
+        </div>
+        <div class="spec-item good">
+          <div class="spec-label">✅ Audio Codecs</div>
+          <div class="spec-val">AAC, MP3, AC3, PCM</div>
+        </div>
+        <div class="spec-item good">
+          <div class="spec-label">✅ Max Resolution</div>
+          <div class="spec-val">Up to 1080p Full HD</div>
+        </div>
+        <div class="spec-item bad">
+          <div class="spec-label">❌ Unsupported Codecs</div>
+          <div class="spec-val">H.265/HEVC, AV1, VP9, DTS, TrueHD, FLAC, EAC3</div>
+        </div>
+        <div class="spec-item bad">
+          <div class="spec-label">❌ Pendrive Limit</div>
+          <div class="spec-val">Files &gt; 4GB won't copy to FAT32 pendrive</div>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>🔒 All file analysis is done locally in your browser. No data is uploaded.</p>
+    </footer>
+
+  </div><!-- /app-wrapper -->
+
+  <!-- MediaInfo.js from CDN for reading video metadata -->
+  <script src="https://unpkg.com/mediainfo.js/dist/mediainfo.min.js"></script>
+  <!-- Tesseract.js OCR for screenshot scanning -->
+  <script src="https://unpkg.com/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
